@@ -29,5 +29,5 @@ jobs:
         run: mkdir .venv
       - name: Extract .venv
         if: steps.pull_old.outputs.IMAGE_MISSING == 0
-        id: create_venv
+        id: extract_venv
         run: echo 'extracting'
