@@ -1,0 +1,33 @@
+
+name: CI
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo 
+        uses: actions/checkout@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASS }}
+      - name: Get current branch
+        id: branch
+        run: echo "::set-output name=branch::$(echo ${GITHUB_REF##*/})"
+      - name: Pull old docker image
+        id: pull_old
+        run:
+          - docker pull ${{ secrets.DOCKERHUB_USER }}/common || export IMAGE_MISSING=1
+          - echo "::set-output name=IMAGE_MISSING::$(echo $IMAGE_MISSING)"
+      - name: Create .venv
+        if: steps.pull_old.outputs.IMAGE_MISSING == 1
+        id: create_venv
+        run: mkdir .venv
+      - name: Extract .venv
+        if: steps.pull_old.outputs.IMAGE_MISSING == 0
+        id: create_venv
+        run: echo 'extracting'
