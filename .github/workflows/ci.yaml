@@ -21,7 +21,7 @@ jobs:
       - name: Pull old docker image
         id: pull_old
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USER }}/common || export IMAGE_MISSING=1
+          docker pull ${{ secrets.DOCKERHUB_USER }}/${{ steps.branch.outputs.branch }} || export IMAGE_MISSING=1
           echo "::set-output name=IMAGE_MISSING::$(echo $IMAGE_MISSING)"
       - name: Create .venv
         if: steps.pull_old.outputs.IMAGE_MISSING == 1
@@ -31,3 +31,7 @@ jobs:
         if: steps.pull_old.outputs.IMAGE_MISSING == 0
         id: extract_venv
         run: echo 'extracting'
+      - name: Build images
+        id: build images
+        run:
+          docker build . -f Dockerfile -t ${{ secrets.DOCKERHUB_USER }}/common
