@@ -20,9 +20,9 @@ jobs:
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF##*/})"
       - name: Pull old docker image
         id: pull_old
-        run:
-          - docker pull ${{ secrets.DOCKERHUB_USER }}/common || export IMAGE_MISSING=1
-          - echo "::set-output name=IMAGE_MISSING::$(echo $IMAGE_MISSING)"
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USER }}/common || export IMAGE_MISSING=1
+          echo "::set-output name=IMAGE_MISSING::$(echo $IMAGE_MISSING)"
       - name: Create .venv
         if: steps.pull_old.outputs.IMAGE_MISSING == 1
         id: create_venv
