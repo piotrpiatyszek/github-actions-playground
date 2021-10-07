@@ -32,6 +32,6 @@ jobs:
         id: extract_venv
         run: echo 'extracting'
       - name: Build images
-        id: build images
+        id: build_images
         run:
           docker build . -f Dockerfile -t ${{ secrets.DOCKERHUB_USER }}/common
